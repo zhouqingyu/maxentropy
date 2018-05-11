@@ -1,4 +1,4 @@
-from info import __doc__
+from maxentropy.info import __doc__
 from maxentropy import *
 from scipy.misc import logsumexp
 

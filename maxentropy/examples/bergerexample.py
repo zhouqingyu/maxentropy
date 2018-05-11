@@ -17,12 +17,12 @@
     subject to these constraints.
 """
 
-__author__ =  'Ed Schofield'
-__version__=  '2.1'
+__author__ = 'Ed Schofield'
+__version__ = '2.1'
 
-from scipy import maxentropy
+from maxentropy import maxentropy
 
-a_grave = u'\u00e0'
+a_grave = '\u00e0'
 
 samplespace = ['dans', 'en', a_grave, 'au cours de', 'pendant']
 
@@ -48,21 +48,19 @@ model.verbose = True
 model.fit(K)
 
 # Output the distribution
-print "\nFitted model parameters are:\n" + str(model.params)
-print "\nFitted distribution is:"
+print("\nFitted model parameters are:\n" + str(model.params))
+print("\nFitted distribution is:")
 p = model.probdist()
 for j in range(len(model.samplespace)):
     x = model.samplespace[j]
-    print ("\tx = %-15s" %(x + ":",) + " p(x) = "+str(p[j])).encode('utf-8')
+    print(("\tx = %-15s" %(x + ":",) + " p(x) = "+str(p[j])))
 
 
 # Now show how well the constraints are satisfied:
-print
-print "Desired constraints:"
-print "\tp['dans'] + p['en'] = 0.3"
-print ("\tp['dans'] + p['" + a_grave + "']  = 0.5").encode('utf-8')
-print
-print "Actual expectations under the fitted model:"
-print "\tp['dans'] + p['en'] =", p[0] + p[1]
-print ("\tp['dans'] + p['" + a_grave + "']  = " + str(p[0]+p[2])).encode('utf-8')
+print("Desired constraints:")
+print("\tp['dans'] + p['en'] = 0.3")
+print(("\tp['dans'] + p['" + a_grave + "']  = 0.5"))
+print("Actual expectations under the fitted model:")
+print("\tp['dans'] + p['en'] =", p[0] + p[1])
+print(("\tp['dans'] + p['" + a_grave + "']  = " + str(p[0]+p[2])))
 # (Or substitute "x.encode('latin-1')" if you have a primitive terminal.)

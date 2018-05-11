@@ -2,7 +2,7 @@
 # Ed Schofield, 2006
 
 from numpy import *
-from scipy.maxentropy import *
+from maxentropy.maxentropy import *
 
 # Two contexts W, four labels x
 # E_p f_0(W, X) = 0.4
@@ -22,14 +22,6 @@ F = array([[1, 0, 0, 0, 0, 0, 0, 0]])
 # etc.
 numcontexts = 2
 numlabels = 4
-
-# OLD:
-# These can be in any order. The indices_context parameter to the
-# conditionalmodel constructor records this order, so indices_context[0] is an
-# array of indices all labels x in context w=0.  The simplest ordering is:
-#     (w0, x0), (w0, x1), ..., (w0, x{n-1}), (w1, x0), ...
-# in which case the parameter is:
-# indices_context = array([[0, 1, 2, 3], [4, 5, 6, 7]])
 
 # The counts of each (w, x) pair, estimated from a corpus or training dataset, is
 # stored as an array with |w| * |x| elements in same order as before.
@@ -51,10 +43,8 @@ model.fit()
 pmf = model.pmf()
 # The elements of this are flatted like the rows of F and p_tilde.  We display
 # them nicely:
-print "x \ w \t 0 \t 1",
+print("x \ w \t 0 \t 1",)
 for x in range(4):
-    print '\n' + str(x),
+    print('\n' + str(x),)
     for w in range(2):
-        print ' \t %.3f' % pmf[w*numlabels + x],
-        # print ' \t %.3f' % pmf[indices_context[w]][x],
-print
+        print(' \t %.3f' % pmf[w*numlabels + x],)

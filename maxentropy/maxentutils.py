@@ -16,6 +16,7 @@ License: BSD-style (see LICENSE.txt in main source directory)
 
 # Future imports must come before any code in 2.5
 from __future__ import division
+from six.moves import xrange
 
 __author__ = "Ed Schofield"
 __version__ = '2.0'
@@ -130,8 +131,8 @@ def arrayexp(x):
     try:
         ex = numpy.exp(x)
     except OverflowError:
-        print "Warning: OverflowError using numpy.exp(). Using slower Python"\
-              " routines instead!"
+        print("Warning: OverflowError using numpy.exp(). Using slower Python"\
+              " routines instead!")
         ex = numpy.empty(len(x), float)
         for j in range(len(x)):
             ex[j] = math.exp(x[j])
@@ -227,10 +228,10 @@ def sparsefeatures(f, x, format='csc_matrix'):
             sparsef[i, 0] = f_i_x
 
     if format == 'csc_matrix':
-        print "Converting to CSC matrix ..."
+        print("Converting to CSC matrix ...")
         return sparsef.tocsc()
     elif format == 'csr_matrix':
-        print "Converting to CSR matrix ..."
+        print("Converting to CSR matrix ...")
         return sparsef.tocsr()
     else:
         return sparsef
@@ -322,22 +323,25 @@ def innerprod(A,v):
     if n != p:
         raise TypeError("matrix dimensions are incompatible")
     if isinstance(v, ndarray):
-        try:
+        if isinstance(v, ndarray):
             # See if A is sparse
-            A.matvec
-        except AttributeError:
-            # It looks like A is dense
-            return numpy.dot(A, v)
-        else:
-            # Assume A is sparse
-            if sparse.isspmatrix(A):
-                innerprod = A.matvec(v)   # This returns a float32 type. Why???
-                return innerprod
+            if isinstance(A, (sparse.lil_matrix,
+                              sparse.csc_matrix,
+                              sparse.csr_matrix,
+                              sparse.coo_matrix)):
+                # Assume A is sparse
+                if sparse.isspmatrix(A):
+                    innerprod = A * v
+                    return innerprod
+                else:
+                    # Assume PySparse format
+                    innerprod = numpy.empty(m, float)
+                    # TODO: matvec is error-prone
+                    A.matvec(v, innerprod)
+                    return innerprod
             else:
-                # Assume PySparse format
-                innerprod = numpy.empty(m, float)
-                A.matvec(v, innerprod)
-                return innerprod
+                # It looks like A is dense
+                return numpy.dot(A, v)
     elif sparse.isspmatrix(v):
         return A * v
     else:
