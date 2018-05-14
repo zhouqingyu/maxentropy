@@ -8,7 +8,8 @@ Copyright: Ed Schofield, 2003-2005
 
 from numpy.testing import assert_almost_equal, TestCase, run_module_suite
 from numpy import arange, log, exp, ones
-from scipy.maxentropy.maxentropy import logsumexp
+from maxentropy import logsumexp
+
 
 class TestMaxentropy(TestCase):
     """Test whether logsumexp() function correctly handles large
@@ -20,7 +21,7 @@ class TestMaxentropy(TestCase):
         assert_almost_equal(logsumexp(a), desired)
 
         # Now test with large numbers
-        b = [1000,1000]
+        b = [1000, 1000]
         desired = 1000.0 + log(2.0)
         assert_almost_equal(logsumexp(b), desired)
 
@@ -31,4 +32,4 @@ class TestMaxentropy(TestCase):
 
 
 if __name__ == "__main__":
-    run_module_suite()
+    run_module_suite(argv=['nosetests', '-v'])
